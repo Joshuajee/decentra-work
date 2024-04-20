@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 export interface IMilestoneFormData {
     title: string;
     description: string;
@@ -7,9 +9,18 @@ export interface IMilestoneFormData {
 interface IProps {
     index: number;
     milestone: IMilestoneFormData;
+    updateMilestone: (index: number, milestone: IMilestoneFormData) => void;
 }
 
-export default function MilestoneForm ({index} : IProps) {
+export default function MilestoneForm ({index, milestone, updateMilestone} : IProps) {
+
+    const [title, setTitle] = useState(milestone.title)
+    const [price, setPrice] = useState(milestone.price)
+    const [description, setDescription] = useState(milestone.description)
+
+    const update = () => {
+        updateMilestone(index, {title, price, description})
+    }
 
     return (
         <div className="my-2">
@@ -19,6 +30,9 @@ export default function MilestoneForm ({index} : IProps) {
             <label>Title</label>
 
             <input 
+                value={title}
+                onChange={(e) =>setTitle(e.target.value)}
+                onBlur={update}
                 className="h-12 my-2 rounded-lg w-full indent-4"
                 placeholder="Run Facebook Ads" />
 
@@ -26,6 +40,9 @@ export default function MilestoneForm ({index} : IProps) {
             <label>Price</label>
 
             <input 
+                value={price}
+                onChange={(e) =>setPrice(Number(e.target.value))}
+                onBlur={update}
                 type="number"
                 className="h-12 my-2 rounded-lg w-full indent-4"
                 placeholder="0.1 sol" />
@@ -33,7 +50,12 @@ export default function MilestoneForm ({index} : IProps) {
             
             <label htmlFor="description">Description</label>
 
-            <textarea id="description" className="block resize-none h-40 w-full">
+            <textarea 
+                value={description}
+                onChange={(e) =>setDescription(e.target.value)}
+                onBlur={update}
+                id="description" 
+                className="block resize-none h-40 w-full">
 
 
 

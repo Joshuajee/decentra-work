@@ -1,18 +1,27 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import MilestoneForm, { IMilestoneFormData } from "./milestone-form";
-import { Button } from "@solana/wallet-adapter-react-ui/lib/types/Button";
-import { WalletButton } from "../solana/solana-provider";
+import { totalPrice } from "../../libs/utils";
 
 
-const dummyMilestone = {title: "", description: "", price: 0}
+const dummyMilestone = {title: "", description: "", price: 0.01}
 
 export default function DashboardFeature() {
 
-  const [milestones, setMilestons] = useState<IMilestoneFormData[]>([{title: "Milestone 1", description: "Completed this", price: 1000000}])
+  const [milestones, setMilestones] = useState<IMilestoneFormData[]>([dummyMilestone])
+
+  const amountToPay = useMemo(() => totalPrice(milestones), [milestones])
 
   const addMilestone = () => {
-    setMilestons([...milestones, dummyMilestone])
+    setMilestones([...milestones, dummyMilestone])
   }
+
+  const updateMileStone = (index: number, milestone: IMilestoneFormData) => {
+    const currentMilestones = [...milestones]
+    currentMilestones[index] = milestone
+    setMilestones(currentMilestones)
+  }
+
+  console.log(milestones)
 
   return (
     <div className="flex justify-center overflow-y-auto mb-20">
@@ -28,7 +37,14 @@ export default function DashboardFeature() {
         
         {
           milestones.map((milestone, index) => {
-            return <MilestoneForm milestone={milestone} key={index} index={index} />
+            return (
+              <MilestoneForm 
+                key={index}
+                index={index}
+                milestone={milestone} 
+                updateMilestone={updateMileStone}
+                />
+            )
           })
         }
 
@@ -44,7 +60,7 @@ export default function DashboardFeature() {
 
         <button
           className="px-4 py-3 my-3 rounded-md border-[1px] border-white w-full"> 
-          Create Work Contract
+          Create Work Contract & pay {amountToPay} Sol
         </button>
      
       </div>

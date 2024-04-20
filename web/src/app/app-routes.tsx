@@ -16,6 +16,7 @@ const routes: RouteObject[] = [
   { path: '/account/', element: <AccountListFeature /> },
   { path: '/account/:address', element: <AccountDetailFeature /> },
   { path: '/contracts', element: <ContractFeature /> },
+  { path: '/contract/:', element: <ContractFeature /> },
 ];
 
 export function AppRoutes() {
@@ -25,7 +26,6 @@ export function AppRoutes() {
         { index: true, element: <Navigate to={'/dashboard'} replace={true} /> },
         { path: '/dashboard', element: <DashboardFeature /> },
         ...routes,
-        { path: '*', element: <Navigate to={'/dashboard'} replace={true} /> },
       ])}
     </UiLayout>
   );

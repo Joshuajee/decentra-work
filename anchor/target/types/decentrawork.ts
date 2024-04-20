@@ -1,6 +1,6 @@
-export type BestOffer = {
+export type Decentrawork = {
   version: '0.1.0';
-  name: 'best_offer';
+  name: 'decentrawork';
   instructions: [
     {
       name: 'close';
@@ -94,9 +94,9 @@ export type BestOffer = {
   ];
 };
 
-export const IDL: BestOffer = {
+export const IDL: Decentrawork = {
   version: '0.1.0',
-  name: 'best_offer',
+  name: 'decentrawork',
   instructions: [
     {
       name: 'close',
