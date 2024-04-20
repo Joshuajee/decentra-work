@@ -1,26 +1,21 @@
 import { lazy } from 'react';
 import { Navigate, RouteObject, useRoutes } from 'react-router-dom';
 import { UiLayout } from './ui/ui-layout';
+import ContractFeature from './contracts/contract-feature';
 
 const AccountListFeature = lazy(() => import('./account/account-list-feature'));
-const AccountDetailFeature = lazy(
-  () => import('./account/account-detail-feature')
-);
-const ClusterFeature = lazy(() => import('./cluster/cluster-feature'));
+const AccountDetailFeature = lazy(() => import('./account/account-detail-feature'));
 const DashboardFeature = lazy(() => import('./dashboard/dashboard-feature'));
 
-const BestOfferFeature = lazy(() => import('./best-offer/best-offer-feature'));
 const links: { label: string; path: string }[] = [
+  { label: 'Contracts', path: '/contracts' },
   { label: 'Account', path: '/account' },
-  { label: 'Clusters', path: '/clusters' },
-  { label: 'BestOffer Program', path: '/best-offer' },
 ];
 
 const routes: RouteObject[] = [
   { path: '/account/', element: <AccountListFeature /> },
   { path: '/account/:address', element: <AccountDetailFeature /> },
-  { path: '/clusters', element: <ClusterFeature /> },
-  { path: 'best-offer/*', element: <BestOfferFeature /> },
+  { path: '/contracts', element: <ContractFeature /> },
 ];
 
 export function AppRoutes() {
