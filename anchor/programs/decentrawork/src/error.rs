@@ -1,13 +1,17 @@
 use anchor_lang::prelude::*;
 
 #[error_code]
-pub enum TodoError {
+pub enum WorkContractError {
     #[msg("You are not authorized to perform this action.")]
     Unauthorized,
+    #[msg("You are not authorized, Only Contractor.")]
+    OnlyContractor,
     #[msg("Not allowed")]
     NotAllowed,
+    #[msg("Client cannot be Contractor")]
+    InvalidContractor,
     #[msg("Math operation overflow")]
     MathOverflow,
-    #[msg("Already marked")]
-    AlreadyMarked,
+    #[msg("Already accepted")]
+    AlreadyAccepted,
 }

@@ -1,19 +1,17 @@
 import { useMemo, useState } from "react";
 import MilestoneForm, { IMilestoneFormData } from "./milestone-form";
 import { totalPrice } from "../../libs/utils";
-
+import { useDencentrawork } from "../contracts/contract-data-access";
 
 const dummyMilestone = {title: "", description: "", price: 0.01}
 
 export default function DashboardFeature() {
 
+  const data = useDencentrawork()
+
   const [milestones, setMilestones] = useState<IMilestoneFormData[]>([dummyMilestone])
 
   const amountToPay = useMemo(() => totalPrice(milestones), [milestones])
-
-  const addMilestone = () => {
-    setMilestones([...milestones, dummyMilestone])
-  }
 
   const updateMileStone = (index: number, milestone: IMilestoneFormData) => {
     const currentMilestones = [...milestones]
@@ -48,7 +46,7 @@ export default function DashboardFeature() {
           })
         }
 
-        <div className="flex justify-center">
+        {/* <div className="flex justify-center">
 
           <button 
             onClick={addMilestone}
@@ -56,7 +54,7 @@ export default function DashboardFeature() {
             + Add Milestone
           </button>
 
-        </div>
+        </div> */}
 
         <button
           className="px-4 py-3 my-3 rounded-md border-[1px] border-white w-full"> 
