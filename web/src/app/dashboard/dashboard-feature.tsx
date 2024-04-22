@@ -1,25 +1,26 @@
-import { useMemo, useState } from "react";
+import { ChangeEvent, useMemo, useState } from "react";
 import MilestoneForm, { IMilestoneFormData } from "./milestone-form";
 import { totalPrice } from "../../libs/utils";
 import { useDencentrawork } from "../contracts/contract-data-access";
+import Web3Button from "../contracts/contract-ui";
 
 const dummyMilestone = {title: "", description: "", price: 0.01}
 
 export default function DashboardFeature() {
 
-  const data = useDencentrawork()
+  const [contractor, setContractor] = useState("")
 
-  const [milestones, setMilestones] = useState<IMilestoneFormData[]>([dummyMilestone])
+  const [milestone, setMilestone] = useState<IMilestoneFormData>(dummyMilestone)
 
-  const amountToPay = useMemo(() => totalPrice(milestones), [milestones])
+  //const amountToPay = useMemo(() => totalPrice(milestones), [milestones])
 
   const updateMileStone = (index: number, milestone: IMilestoneFormData) => {
-    const currentMilestones = [...milestones]
-    currentMilestones[index] = milestone
-    setMilestones(currentMilestones)
+    setMilestone(milestone)
   }
 
-  console.log(milestones)
+  console.log(milestone)
+
+  
 
   return (
     <div className="flex justify-center overflow-y-auto mb-20">
@@ -29,22 +30,18 @@ export default function DashboardFeature() {
         <h2 className="text-center text-2xl ">Create Work Contract</h2>
 
         <input 
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setContractor(e.currentTarget.value) }
           className="h-12 my-2 rounded-lg w-full indent-4"
           placeholder="Enter Contractor's Address" />
 
         
-        {
-          milestones.map((milestone, index) => {
-            return (
-              <MilestoneForm 
-                key={index}
-                index={index}
-                milestone={milestone} 
-                updateMilestone={updateMileStone}
-                />
-            )
-          })
-        }
+ 
+        <MilestoneForm 
+          index={0}
+          milestone={milestone} 
+          updateMilestone={updateMileStone}
+          />
+
 
         {/* <div className="flex justify-center">
 
@@ -56,10 +53,19 @@ export default function DashboardFeature() {
 
         </div> */}
 
-        <button
-          className="px-4 py-3 my-3 rounded-md border-[1px] border-white w-full"> 
-          Create Work Contract & pay {amountToPay} Sol
-        </button>
+
+        <Web3Button 
+          action="create-contract"
+          data={
+            {
+              contractor, 
+              title: milestone?.title, 
+              description: milestone?.description, 
+              price: milestone?.price 
+            }}
+          >  
+          Create Work Contract 
+        </Web3Button>
      
       </div>
 
