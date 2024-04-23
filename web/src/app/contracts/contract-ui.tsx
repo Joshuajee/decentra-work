@@ -1,5 +1,5 @@
 import { ReactNode } from "react"
-import { ICreateContract, useDencentrawork } from "./contract-data-access"
+import { ICreateContract, useDencentrawork } from "../context/use-decentrawork"
 
 interface IProps {
     children: ReactNode;

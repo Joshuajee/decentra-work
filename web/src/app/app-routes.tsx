@@ -2,6 +2,7 @@ import { lazy } from 'react';
 import { Navigate, RouteObject, useRoutes } from 'react-router-dom';
 import { UiLayout } from './ui/ui-layout';
 import ContractFeature from './contracts/contract-feature';
+import MilestoneFeature from './contracts/milestone-feature';
 
 const AccountListFeature = lazy(() => import('./account/account-list-feature'));
 const AccountDetailFeature = lazy(() => import('./account/account-detail-feature'));
@@ -16,7 +17,7 @@ const routes: RouteObject[] = [
   { path: '/account/', element: <AccountListFeature /> },
   { path: '/account/:address', element: <AccountDetailFeature /> },
   { path: '/contracts', element: <ContractFeature /> },
-  { path: '/contract/:', element: <ContractFeature /> },
+  { path: '/contract/:address', element: <MilestoneFeature /> },
 ];
 
 export function AppRoutes() {

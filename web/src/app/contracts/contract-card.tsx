@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { IWorkContract } from "../context/use-decentrawork";
 
 export interface IMilestoneFormData {
     title: string;
@@ -7,35 +8,32 @@ export interface IMilestoneFormData {
 }
 
 interface IProps {
-    index: number;
-    milestone: IMilestoneFormData;
+    contract: IWorkContract
 }
 
-export default function ContractCard () {
+export default function ContractCard ({contract} : IProps) {
+
+    const { authority, contractor, milestones, key } = contract
 
     const navigate = useNavigate()
 
     return (
-        <div className="my-2 w-full bg-base-300 rounded-md p-6">
+        <div className="flex gap-3 flex-col items-center my-2 w-full bg-base-300 rounded-md p-6">
 
+            <h3> Client PDA </h3>
 
-            <p>Client: </p>
+            <p> {authority.toString()} </p>
 
-            <p>Contractor: </p>
+            <h3>Contractor PDA</h3>
 
-            <p>Price:</p>
+            <p>{contractor.toString()}</p>
 
-            <div className="flex justify-between">
+            <h3> Milestones {milestones} </h3>
 
-                <p>Milestones: </p>
+            <button onClick={() => navigate("/contract/"+ key)}>
+                View
+            </button>
 
-                <button onClick={() => navigate("/contract/")}>
-                    View
-                </button>
-
-
-            </div>
-            
         </div>
     )   
 }

@@ -1,5 +1,6 @@
 import { AppRoutes } from './app-routes';
 import { ClusterProvider } from './cluster/cluster-data-access';
+import DecentraWorkProvider from './context/decentrawork-context';
 import { SolanaProvider } from './solana/solana-provider';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
@@ -10,7 +11,9 @@ export function App() {
     <QueryClientProvider client={client}>
       <ClusterProvider>
         <SolanaProvider>
-          <AppRoutes />
+          <DecentraWorkProvider>
+            <AppRoutes />
+          </DecentraWorkProvider>
         </SolanaProvider>
       </ClusterProvider>
     </QueryClientProvider>

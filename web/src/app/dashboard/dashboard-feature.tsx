@@ -1,7 +1,5 @@
-import { ChangeEvent, useMemo, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import MilestoneForm, { IMilestoneFormData } from "./milestone-form";
-import { totalPrice } from "../../libs/utils";
-import { useDencentrawork } from "../contracts/contract-data-access";
 import Web3Button from "../contracts/contract-ui";
 
 const dummyMilestone = {title: "", description: "", price: 0.01}
@@ -33,8 +31,6 @@ export default function DashboardFeature() {
           onChange={(e: ChangeEvent<HTMLInputElement>) => setContractor(e.currentTarget.value) }
           className="h-12 my-2 rounded-lg w-full indent-4"
           placeholder="Enter Contractor's Address" />
-
-        
  
         <MilestoneForm 
           index={0}
