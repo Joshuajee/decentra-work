@@ -1,25 +1,36 @@
-import ContractCard from "./contract-card";
-import { useDencentrawork } from "../context/use-decentrawork";
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import 'react-tabs/style/react-tabs.css';
+import { useContext } from "react";
+import { DecentraWorkContext } from "../context/decentrawork-context";
+import WorkContract from './tabs/work-contracts';
+import EmploymentContract from './tabs/employment-contract';
 
 export default function ContractFeature() {
 
-    const { clientContracts } = useDencentrawork()
+
+    const { initialized, program, publicKey, transactionPending, userProfile, setLoading, } = useContext(DecentraWorkContext)
+
+
 
 
     return (
-        <div className="flex w-full left-0 justify-center overflow-y-auto mb-20">
+        <div className="relative flex w-full left-0 justify-center overflow-y-auto my-20">
 
-            <div className="flex flex-col w-[500px] gap-3 max-w-4/5 shrink-0 my-12 p-6 overflow-y-auto">
+            <Tabs className={"w-full"}>
 
-                {
-                    clientContracts.map((contract) => {
-                        return <ContractCard contract={contract} />
-                    })
-                }
-     
-           
+                <TabList className={"flex justify-center w-full"} > 
+                    <Tab>Job Contracts</Tab> <Tab>Employment Contracts</Tab> 
+                </TabList>
 
-            </div>
+                <TabPanel>
+                    <WorkContract />
+                </TabPanel>
+
+                <TabPanel>
+                    <EmploymentContract />
+                </TabPanel>
+
+            </Tabs>
 
         </div>
     );

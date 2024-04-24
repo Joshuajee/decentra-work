@@ -1,13 +1,18 @@
-use anchor_lang::prelude::*;
+use anchor_lang::{
+    prelude::*,
+    solana_program::{clock::Clock, hash::hash, program::invoke, system_instruction::transfer},
+};
+
+
+
 
 pub mod constant;
 pub mod error;
 pub mod states;
 use crate::{constant::*, error::*, states::*};
-
 // This is your program's public key and it will update
-// automatically when you build the project.
-declare_id!("L5zX8wnJGjGpZh3KQ5G9KFPpKaAnyX5D7ujTc6zQfUM");
+// automatically wJhen you build the project.
+declare_id!("CzoMo3ZgxB7fBrdjDugdH75wAB4xcgjRdDf7KJV87JGT");
 
 #[program]
 mod decentrawork {
@@ -28,7 +33,7 @@ mod decentrawork {
         contractor: Pubkey,
         title: String,
         description: String,
-        price: u128,
+        price: u64,
     ) -> Result<()> {
         let work_contract_account = &mut ctx.accounts.work_contract_account;
         let user_profile = &mut ctx.accounts.user_profile;
@@ -55,21 +60,22 @@ mod decentrawork {
         work_contract_milestone.authority = client_key;
         work_contract_milestone.contractor = contractor;
         work_contract_milestone.work_contract = work_contract_account.key();
+        work_contract_milestone.idx = 0;
         work_contract_milestone.title = title;
         work_contract_milestone.description = description;
         work_contract_milestone.price = price;
         work_contract_milestone.disputed = false;
         work_contract_milestone.disputed_at = 0;
 
-        // Transfer SOL to Milestone PDA
-        // invoke(
-        //     &transfer(&client_key, &work_contract_milestone.key(), price),
-        //     &[
-        //         ctx.accounts.authority.to_account_info(),
-        //         work_contract_milestone.to_account_info(),
-        //         ctx.accounts.system_program.to_account_info(),
-        //     ],
-        // )?;
+        //Transfer SOL to Milestone PDA
+        invoke(
+            &transfer(&client_key, &work_contract_milestone.key(), price),
+            &[
+                ctx.accounts.authority.to_account_info(),
+                work_contract_milestone.to_account_info(),
+                ctx.accounts.system_program.to_account_info(),
+            ],
+        )?;
 
         require!(
             contractor != work_contract_account.authority,
@@ -82,6 +88,8 @@ mod decentrawork {
     pub fn accept_contract(ctx: Context<AcceptContract>) -> Result<()> {
         let authority = ctx.accounts.authority.key();
         let work_contract_account = &mut ctx.accounts.work_contract_account;
+        let user_profile = &mut ctx.accounts.user_profile;
+        let work_contract_reference = &mut ctx.accounts.work_contract_reference;
 
         require!(
             !work_contract_account.accepted,
@@ -95,36 +103,90 @@ mod decentrawork {
 
         // Mark as accepted
         work_contract_account.accepted = true;
+        user_profile.contract_refs += user_profile.contract_refs;
+
+        //Create Refs
+        work_contract_reference.authority = authority.key(); 
+        work_contract_reference.contract = work_contract_account.key(); 
+        
         Ok(())
     }
 
-    // pub fn create_work_milestone(
-    //     ctx: Context<CreateWorkMilestone>,
-    //     contractor: Pubkey,
-    //     title: String,
-    //     price: String,
-    //     description: String,
-    // ) -> Result<()> {
-    //     let work_contract_account = &mut ctx.accounts.work_contract_account;
-    //     let user_profile = &mut ctx.accounts.user_profile;
+    pub fn add_work_milestone(
+        ctx: Context<AddWorkMilestone>,
+        title: String,
+        description: String,
+        price: u64,
+    ) -> Result<()> {
 
-    //     // Fill contents with argument
-    //     work_contract_milestone.authority = ctx.accounts.authority.key();
-    //     work_contract_milestone.contractor = contractor;
-    //     work_contract_milestone.idx = user_profile.last_contract_index;
-    //     work_contract_milestone.content = milestones;
+        let work_contract_account = &mut ctx.accounts.work_contract_account;
+        let user_profile = &mut ctx.accounts.user_profile;
+        let work_contract_milestone = &mut ctx.accounts.work_contract_milestone;
 
-    //     // Increase contract idx
-    //     user_profile.last_contract_index = user_profile.last_contract_index.checked_add(1).unwrap();
+        let milestones = work_contract_account.milestones;
 
-    //     // Increase total contract count
-    //     user_profile.contract_count = user_profile.contract_count.checked_add(1).unwrap();
+        let client_key = user_profile.authority.key();
 
-    //     Ok(())
-    // }
+        // create milestone
+        work_contract_milestone.authority = user_profile.authority;
+        work_contract_milestone.contractor = work_contract_account.contractor;
+        work_contract_milestone.work_contract = work_contract_account.key();
+        work_contract_milestone.idx = milestones + 1;
+        work_contract_milestone.title = title;
+        work_contract_milestone.description = description;
+        work_contract_milestone.price = price;
+        work_contract_milestone.disputed = false;
+        work_contract_milestone.disputed_at = 0;
 
-    //fn create_milestone()
+        // Increase contract idx
+        work_contract_account.milestones = milestones.checked_add(1).unwrap();
 
+        // Transfer Token
+        invoke(
+            &transfer(&client_key, &work_contract_milestone.key(), price),
+            &[
+                ctx.accounts.authority.to_account_info(),
+                work_contract_milestone.to_account_info(),
+                ctx.accounts.system_program.to_account_info(),
+            ],
+        )?;
+
+        Ok(())
+    }
+
+    pub fn pay_work_milestone(ctx: Context<PayWorkMilestone>) -> Result<()> {
+
+        let work_contract_milestone = &mut ctx.accounts.work_contract_milestone;
+
+
+        // create milestone
+        require!(
+            work_contract_milestone.authority == ctx.accounts.authority.key(),
+            WorkContractError::Unauthorized
+        );
+
+        work_contract_milestone.paid = true;
+
+        // // Transfer Token
+        // invoke(
+        //     &transfer(&work_contract_milestone.key(), &contractor, work_contract_milestone.price),
+        //     &[
+        //         work_contract_milestone.to_account_info(),
+        //         work_contract_milestone.to_account_info(),
+        //         //contractor,
+        //         ctx.accounts.system_program.to_account_info(),
+        //     ],
+        // )?;
+
+        Ok(())
+    }
+
+}
+
+
+#[account]
+pub struct UserAccount {
+    pub data: u64,
 }
 
 #[derive(Accounts)]
@@ -167,7 +229,7 @@ pub struct CreateWorkContract<'info> {
 
     #[account(
         init,
-        seeds = [MILESTONE_TAG],
+        seeds = [MILESTONE_TAG, work_contract_account.key().as_ref(), &[0 as u8].as_ref()],
         bump,
         payer = authority,
         space = std::mem::size_of::<WorkContractMilestone>() + 8,
@@ -183,8 +245,28 @@ pub struct CreateWorkContract<'info> {
 #[derive(Accounts)]
 #[instruction()]
 pub struct AcceptContract<'info> {
+
     #[account(mut)]
     pub work_contract_account: Box<Account<'info, WorkContractAccount>>,
+
+    #[account(
+        mut,
+        seeds = [USER_TAG, authority.key().as_ref()],
+        bump,
+        has_one = authority,
+    )]
+    pub user_profile: Box<Account<'info, UserProfile>>,
+
+    #[account(
+        init,
+        seeds = [REFERENCE_TAG, authority.key().as_ref(), &[user_profile.contract_refs as u8].as_ref()],
+        bump,
+        payer = authority,
+        space = std::mem::size_of::<WorkContractMilestone>() + 8,
+    )]
+    pub work_contract_reference: Box<Account<'info, WorkContractReference>>,
+
+
 
     #[account(mut)]
     pub authority: Signer<'info>,
@@ -192,28 +274,47 @@ pub struct AcceptContract<'info> {
     pub system_program: Program<'info, System>,
 }
 
-// #[derive(Accounts)]
-// #[instruction()]
-// pub struct WorkContractMilestone<'info> {
-//     #[account(
-//         mut,
-//         seeds = [USER_TAG, authority.key().as_ref()],
-//         bump,
-//         has_one = authority,
-//     )]
-//     pub user_profile: Box<Account<'info, UserProfile>>,
+#[derive(Accounts)]
+#[instruction()]
+pub struct AddWorkMilestone<'info> {
 
-//     #[account(
-//         init,
-//         seeds = [MILESTONE_TAG, authority.key().as_ref(), &[user_profile.last_contract_index as u8].as_ref()],
-//         bump,
-//         payer = authority,
-//         space = std::mem::size_of::<WorkContractMilestone>() + 8,
-//     )]
-//     pub work_contract_milestone: Box<Account<'info, WorkContractMilestone>>,
+    #[account(
+        mut,
+        seeds = [USER_TAG, authority.key().as_ref()],
+        bump,
+        has_one = authority,
+    )]
+    pub user_profile: Box<Account<'info, UserProfile>>,
 
-//     #[account(mut)]
-//     pub authority: Signer<'info>,
+    #[account(mut)]
+    pub work_contract_account: Box<Account<'info, WorkContractAccount>>,
 
-//     pub system_program: Program<'info, System>,
-// }
+    #[account(
+        init,
+        seeds = [MILESTONE_TAG, work_contract_account.key().as_ref(), &[work_contract_account.milestones as u8].as_ref()],
+        bump,
+        payer = authority,
+        space = std::mem::size_of::<WorkContractMilestone>() + 8,
+    )]
+    pub work_contract_milestone: Box<Account<'info, WorkContractMilestone>>,
+
+    #[account(mut)]
+    pub authority: Signer<'info>,
+
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+#[instruction()]
+pub struct PayWorkMilestone<'info> {
+    #[account(
+        mut,
+        has_one = authority
+    )]
+    pub work_contract_milestone: Box<Account<'info, WorkContractMilestone>>,
+
+    #[account(mut)]
+    pub authority: Signer<'info>,
+
+    pub system_program: Program<'info, System>,
+}

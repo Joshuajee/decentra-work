@@ -8,3 +8,6 @@ pub const WORK_TAG: &[u8] = b"WORK_CONTRACT_STATE";
 
 #[constant]
 pub const MILESTONE_TAG: &[u8] = b"WORK_MILESTONE_STATE";
+
+#[constant]
+pub const REFERENCE_TAG: &[u8] = b"WORK_REFERENCE_STATE";

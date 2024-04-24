@@ -6,8 +6,11 @@ import { DecentraWorkContext } from "../context/decentrawork-context";
 import { findProgramAddressSync } from "@project-serum/anchor/dist/cjs/utils/pubkey";
 import { utf8 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
 import MilestoneCard from "./milestone-card";
+import { useParams } from "react-router-dom";
 
 export default function MilestoneFeature() {
+
+    const { address } = useParams()
 
     const { 
         loading, program, publicKey,
@@ -46,13 +49,8 @@ export default function MilestoneFeature() {
     
                     const keys = generateMultipleMilestones(workPDA, 0, Number(workContractAccount?.milestones))
     
-                    console.log(keys[0].toString())
-    
                     const milestoneAccounts: IWorkContract[] = await program.account.workContractMilestone.fetchMultiple(keys) as IWorkContract[]
           
-                    console.log({milestoneAccounts})
-    
-    
                     if (milestoneAccounts) {
                         const contracts = milestoneAccounts.map((workContractAccount, index) => {
                             return {...workContractAccount, key: keys[index]}
@@ -69,10 +67,9 @@ export default function MilestoneFeature() {
             }
         }  
         
-        
-        findContractMilestones(new PublicKey("5anwLaDv7TPP2d9dnVNbfr6DnUCdrWQUqnVLZQBQ8wRr"))
+        findContractMilestones(new PublicKey(String(address)))
 
-    }, [initialized, program, transactionPending, publicKey, setLoading])
+    }, [initialized, program, transactionPending, publicKey, address, setLoading])
 
 
     return (

@@ -1,5 +1,5 @@
 import { createContext, ReactNode } from "react";
-import { ICreateContract, IUserProfile, IWorkContract, useDencentrawork } from "./use-decentrawork";
+import { IUserProfile, useDencentrawork } from "./use-decentrawork";
 import { PublicKey } from "@solana/web3.js";
 
 export interface IDecentraWorkContext { 
@@ -7,11 +7,11 @@ export interface IDecentraWorkContext {
     initialized: boolean; 
     loading: boolean; 
     transactionPending: boolean; 
-    clientContracts: IWorkContract[], 
+    userProfile?: IUserProfile;
     program: any, 
     initializeUser:  () => void; 
     setLoading: (value: boolean) => void,
-    createContract: (data: ICreateContract) => void, 
+    setTransactionPending: (value: boolean) => void,
 }
 
 export const DecentraWorkContext = createContext({} as IDecentraWorkContext)
