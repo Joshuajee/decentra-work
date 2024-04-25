@@ -10,15 +10,9 @@ export default function DashboardFeature() {
 
   const [milestone, setMilestone] = useState<IMilestoneFormData>(dummyMilestone)
 
-  //const amountToPay = useMemo(() => totalPrice(milestones), [milestones])
-
   const updateMileStone = (index: number, milestone: IMilestoneFormData) => {
     setMilestone(milestone)
-  }
-
-  console.log(milestone)
-
-  
+  }  
 
   return (
     <div className="flex justify-center overflow-y-auto mb-20">
@@ -31,6 +25,9 @@ export default function DashboardFeature() {
           onChange={(e: ChangeEvent<HTMLInputElement>) => setContractor(e.currentTarget.value) }
           className="h-12 my-2 rounded-lg w-full indent-4"
           placeholder="Enter Contractor's Address" />
+
+
+        <h3 className="text-center">Milestone #1</h3>
  
         <MilestoneForm 
           index={0}

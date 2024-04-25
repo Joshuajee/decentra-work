@@ -27,14 +27,16 @@ export default function MilestoneFeature() {
     const [contract, setContract] = useState<IWorkContract>()
     const [milestones, setMilestones] = useState([])
     const [milestone, setMilestone] = useState<IMilestoneFormData>(dummyMilestone)
-
-    //const amountToPay = useMemo(() => totalPrice(milestones), [milestones])
   
     const updateMileStone = (index: number, milestone: IMilestoneFormData) => {
       setMilestone(milestone)
     }
   
     console.log(milestone)
+
+    const hide = () => {
+        setOpen(false)
+    }
   
 
     useEffect(() => {
@@ -119,13 +121,20 @@ export default function MilestoneFeature() {
      
             </div>
 
-            <AppModal 
-                title={'Add Milestone'}
-                hide={() => setOpen(false)} show={open}>
+            <AppModal title={'Add Milestone'} hide={hide} show={open}>
                     <>
                         <MilestoneForm index={milestones.length} milestone={milestone} updateMilestone={updateMileStone} />
                         
-                        <Web3Button action="add-milestone" data={{...milestone, idx: milestones.length, workPda: new PublicKey(String(address))}}>Create Milestone</Web3Button>
+                        <Web3Button 
+                            action="add-milestone" 
+                            data={{
+                                ...milestone, 
+                                idx: milestones.length, 
+                                workPda: new PublicKey(String(address)),
+                                hide
+                                }}>
+                            Create Milestone
+                        </Web3Button>
                     </>
             </AppModal>
 

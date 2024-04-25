@@ -8,7 +8,7 @@ import { findProgramAddressSync } from '@project-serum/anchor/dist/cjs/utils/pub
 import { utf8 } from '@project-serum/anchor/dist/cjs/utils/bytes';
 
 
-const PROGRAM_ID = "CzoMo3ZgxB7fBrdjDugdH75wAB4xcgjRdDf7KJV87JGT"
+const PROGRAM_ID = "2sMHGGGZkU7dWcexLxyCg8LUjrBekpqCnViJ4UURGS33"
 
 export interface IUserProfile {
     contractCount: number;
@@ -31,7 +31,8 @@ export interface ICreateWorkMilestone {
     title: string; 
     description: string; 
     price: number;
-    workPda: PublicKey
+    workPda: PublicKey;
+    hide: () => void;
 }
 export interface IWorkContract {
     key: PublicKey;

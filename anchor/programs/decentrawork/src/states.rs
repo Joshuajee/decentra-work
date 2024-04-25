@@ -37,6 +37,7 @@ pub struct WorkContractMilestone {
     pub description: String,
     pub price: u64,
     pub paid: bool,
+    pub claimed: bool,
     pub disputed: bool,
     pub disputed_at: u64
 }

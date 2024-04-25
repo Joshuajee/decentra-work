@@ -4,8 +4,8 @@ import { DecentraWorkContext } from "../context/decentrawork-context";
 import { findProgramAddressSync } from "@project-serum/anchor/dist/cjs/utils/pubkey";
 import { utf8 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
 import { LAMPORTS_PER_SOL, PublicKey, SystemProgram } from "@solana/web3.js";
-import { numberToUint64 } from "../libs/utils";
 import toast from "react-hot-toast";
+import { BN } from "@coral-xyz/anchor";
 
 interface IProps {
     children: ReactNode;
@@ -37,7 +37,7 @@ const Web3Button = ({ children, action, data }: IProps) => {
                         new PublicKey(contractor), 
                         title, 
                         description, 
-                        numberToUint64(price * LAMPORTS_PER_SOL)
+                        new BN(price * LAMPORTS_PER_SOL)
                     )
                     .accounts({
                         userProfile: profilePda,
@@ -93,7 +93,7 @@ const Web3Button = ({ children, action, data }: IProps) => {
 
     const addWorkMilestone = async (data: ICreateWorkMilestone) => {
 
-        const { workPda, idx, title, description, price } = data
+        const { workPda, idx, title, description, price, hide } = data
 
         if (program && publicKey) {
             try {
@@ -105,10 +105,10 @@ const Web3Button = ({ children, action, data }: IProps) => {
                 const [milestonePda] = findProgramAddressSync([utf8.encode(WORK_MILESTONE_STATE), workPda.toBuffer(),  Uint8Array.from([Number(idx)])], program.programId)
                 
                 const tx = await program.methods
-                    .createWorkContract(
+                    .addWorkMilestone(
                         title, 
                         description, 
-                        numberToUint64(price * LAMPORTS_PER_SOL)
+                        new BN(price * LAMPORTS_PER_SOL)
                     )
                     .accounts({
                         userProfile: profilePda,
@@ -119,6 +119,7 @@ const Web3Button = ({ children, action, data }: IProps) => {
                     }).rpc()
                 console.log(tx)
                 toast.success('Milestone added Successfully.')
+                hide()
             } catch (error) {
                 console.error(error)
                 toast.error((error as any)?.toString())

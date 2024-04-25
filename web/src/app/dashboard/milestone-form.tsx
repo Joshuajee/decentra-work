@@ -23,9 +23,7 @@ export default function MilestoneForm ({index, milestone, updateMilestone} : IPr
     }
 
     return (
-        <div className="my-2">
-
-            <h3 className="text-center">Milestone #{index + 1}</h3>
+        <div className="my-2 text-white">
 
             <label>Title</label>
 
