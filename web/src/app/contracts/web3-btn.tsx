@@ -184,6 +184,8 @@ const Web3Button = ({ children, action, data }: IProps) => {
 
     const handleClick = () => {
 
+        if (!publicKey) toast.error("Please connect your wallet")
+
         if (!initialized) {
             initializeUser()
             return
