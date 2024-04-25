@@ -55,7 +55,7 @@ export default function MilestoneForm ({index, milestone, updateMilestone} : IPr
                 onChange={(e) =>setDescription(e.target.value)}
                 onBlur={update}
                 id="description" 
-                className="block resize-none h-40 w-full">
+                className="block resize-none h-40 w-full px-4 py-2 rounded-xl">
 
 
 

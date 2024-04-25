@@ -1,8 +1,8 @@
 import { ChangeEvent, useState } from "react";
 import MilestoneForm, { IMilestoneFormData } from "./milestone-form";
-import Web3Button from "../contracts/contract-ui";
+import Web3Button from "../contracts/web3-btn";
 
-const dummyMilestone = {title: "", description: "", price: 0.01}
+export const dummyMilestone = {title: "", description: "", price: 0.01}
 
 export default function DashboardFeature() {
 
@@ -37,17 +37,6 @@ export default function DashboardFeature() {
           milestone={milestone} 
           updateMilestone={updateMileStone}
           />
-
-
-        {/* <div className="flex justify-center">
-
-          <button 
-            onClick={addMilestone}
-            className="px-4 py-2 rounded-md border-[1px] border-white"> 
-            + Add Milestone
-          </button>
-
-        </div> */}
 
 
         <Web3Button 

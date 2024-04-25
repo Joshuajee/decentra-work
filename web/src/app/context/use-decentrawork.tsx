@@ -15,7 +15,6 @@ export interface IUserProfile {
     lastContractIndex: number;
     contractRefs: number;
 }
-
 export interface ICreateContract {
     contractor: string; 
     title: string; 
@@ -23,15 +22,29 @@ export interface ICreateContract {
     price: number
 }
 
+export interface IAcceptContract {
+    workContract: PublicKey
+}
+
+export interface ICreateWorkMilestone {
+    idx: number;
+    title: string; 
+    description: string; 
+    price: number;
+    workPda: PublicKey
+}
 export interface IWorkContract {
     key: PublicKey;
     authority: PublicKey;
     contractor: PublicKey;
     idx: number;
     milestones: number;
+    accepted: boolean
 }
-
-
+export interface IWorkRefContract {
+    authority: PublicKey;
+    contract: PublicKey;
+}
 export interface IMilestoneContract {
     key: PublicKey;
     authority: PublicKey;
@@ -40,6 +53,11 @@ export interface IMilestoneContract {
     title: string;
     description: string;
     price: number;
+    paid: boolean;
+}
+
+export interface IPayMilestone {
+    contract: PublicKey;
 }
 
 export const USER_STATE = "USER_STATE"

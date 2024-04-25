@@ -3,7 +3,7 @@ import ContractCard from "../contract-card"
 import { findProgramAddressSync } from "@project-serum/anchor/dist/cjs/utils/pubkey"
 import { DecentraWorkContext } from "../../context/decentrawork-context"
 import { PublicKey } from "@solana/web3.js"
-import { IWorkContract, WORK_CONTRACT_STATE, WORK_REFERENCE_STATE } from "../../context/use-decentrawork"
+import { IWorkContract, IWorkRefContract, WORK_REFERENCE_STATE } from "../../context/use-decentrawork"
 import { utf8 } from "@coral-xyz/anchor/dist/cjs/utils/bytes"
 
 const EmploymentContract = () => {
@@ -25,12 +25,6 @@ const EmploymentContract = () => {
             return PDA
         }
 
-
-        const generateWorkPDA = (publicKey: PublicKey, index: number) => {
-            const [workPDA] = findProgramAddressSync([utf8.encode(WORK_CONTRACT_STATE), publicKey.toBuffer(), Uint8Array.from([index])], (program as any).programId)
-            return  workPDA
-        }
-
         const generateMultiple = (publicKey: PublicKey, start = 0, end: number) => {
             const keys: PublicKey[] = []
 
@@ -47,18 +41,19 @@ const EmploymentContract = () => {
                 try {
                     setLoading(true)
 
-                    console.log({userProfile})
-
                     const keys = generateMultiple(publicKey, 0, Number(userProfile?.contractRefs))
 
-                    const workContractRefs: IWorkContract[] = await program.account.workContractAccount.fetchMultiple(keys) as IWorkContract[]
+                    const workContractRefs: IWorkRefContract[] = await program.account.workContractReference.fetchMultiple(keys) as IWorkRefContract[]
 
-                    console.log({workContractRefs})
-                    const workContractAccounts: IWorkContract[] = await program.account.workContractAccount.fetchMultiple(keys) as IWorkContract[]
+                    const workContractKeys = workContractRefs.map((ref) => {
+                        return ref.contract
+                    })
+
+                    const workContractAccounts: IWorkContract[] = await program.account.workContractAccount.fetchMultiple(workContractKeys) as IWorkContract[]
 
                     if (workContractAccounts) {
                         const contracts = workContractAccounts.map((workContractAccount, index) => {
-                            return {...workContractAccount, key: keys[index]}
+                            return {...workContractAccount, key: workContractKeys[index]}
                         })
                         setClientContracts(contracts as any)
                     } 
@@ -71,7 +66,8 @@ const EmploymentContract = () => {
         }
 
         findClientContracts()
-    }, [publicKey, program, initialized, transactionPending, userProfile?.contractCount, setLoading])
+
+    }, [publicKey, program, initialized, transactionPending, userProfile?.contractRefs, setLoading])
 
 
 

@@ -1,5 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { IWorkContract } from "../context/use-decentrawork";
+import Web3Button from "./web3-btn";
+import { PublicKey } from "@solana/web3.js";
 
 export interface IMilestoneFormData {
     title: string;
@@ -8,17 +10,19 @@ export interface IMilestoneFormData {
 }
 
 interface IProps {
-    contract: IWorkContract
+    contract: IWorkContract;
+    accept?: boolean;
+    client?: PublicKey | null;
 }
 
-export default function ContractCard ({contract} : IProps) {
+export default function ContractCard ({contract, accept, client} : IProps) {
 
-    const { authority, contractor, milestones, key } = contract
+    const { authority, contractor, milestones, accepted, key } = contract
 
     const navigate = useNavigate()
 
     return (
-        <div className="flex gap-3 flex-col items-center my-2 w-full bg-base-300 rounded-md p-6">
+        <div className="flex gap-3 flex-col my-2 w-full bg-base-300 rounded-md p-6">
 
             <h3> Client PDA </h3>
 
@@ -28,11 +32,21 @@ export default function ContractCard ({contract} : IProps) {
 
             <p>{contractor.toString()}</p>
 
-            <h3> Milestones {milestones} </h3>
+            <h3> Milestones: {milestones} </h3>
 
-            <button onClick={() => navigate("/contract/"+ key)}>
+            <h3>Accepted: {accepted ? "Yes" : "No"} </h3>
+
+            <button className="border-[1px] border-white p-2" onClick={() => navigate("/contract/"+ key)}>
                 View
             </button>
+
+            {
+                accept && !accepted && contractor.toString() === client?.toString() &&(
+                    <div className="bg-green-700 rounded-md">
+                        <Web3Button data={new PublicKey(key)} action="accept-contract">Accept Contract</Web3Button>
+                    </div>
+                )
+            }
 
         </div>
     )   
