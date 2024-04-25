@@ -11,9 +11,9 @@ export default function ContractFeature() {
     return (
         <div className="relative flex w-full left-0 justify-center overflow-y-auto my-20">
 
-            <Tabs className={"w-full"}>
+            <Tabs className={"w-full overflow-hidden"}>
 
-                <TabList className={"flex justify-center w-full"} > 
+                <TabList className={"flex justify-center w-full overflow-hidden"} > 
                     <Tab>Job Contracts</Tab> <Tab>Employment Contracts</Tab> 
                 </TabList>
 

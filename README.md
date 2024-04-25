@@ -2,7 +2,9 @@
 
 ## Demo-video
 
-![Demo](./resource/video.mp4)
+Link to video
+
+https://vimeo.com/939150710?share=copy
 
 
 This project is generated with the [create-solana-dapp](https://github.com/solana-developers/create-solana-dapp) generator.
