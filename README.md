@@ -2,7 +2,8 @@
 
 ## Demo-video
 
-<iframe src="https://player.vimeo.com/video/939150710?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" width="100%" height="600px" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+![Demo](./resource/video.mp4)
+
 
 This project is generated with the [create-solana-dapp](https://github.com/solana-developers/create-solana-dapp) generator.
 
