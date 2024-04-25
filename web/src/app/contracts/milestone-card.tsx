@@ -16,8 +16,7 @@ interface IProps {
 
 export default function MilestoneCard ({contract, publicKey} : IProps) {
 
-    const { key, title, description, idx, price, authority, contractor, paid  } = contract
-
+    const { key, title, description, idx, price, authority, contractor, paid, claimed  } = contract
 
     return (
         <div className="flex gap-3 flex-col my-2 w-full bg-base-300 rounded-md p-6">
@@ -47,7 +46,7 @@ export default function MilestoneCard ({contract, publicKey} : IProps) {
 
                 {
 
-                    publicKey.toString() === contractor.toString() && paid &&
+                    publicKey.toString() === contractor.toString() && paid && !claimed &&
                         <div className="bg-green-900 p-0 w-60 rounded-md">
 
                             <Web3Button action="claim-milestone" data={key} >

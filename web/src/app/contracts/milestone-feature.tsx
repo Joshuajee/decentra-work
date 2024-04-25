@@ -11,15 +11,16 @@ import { AppModal } from "../ui/ui-layout";
 import MilestoneForm from "../dashboard/milestone-form";
 import { dummyMilestone } from "../dashboard/dashboard-feature";
 import Web3Button from "./web3-btn";
+import Loader from "../ui/loader";
 
 export default function MilestoneFeature() {
 
     const { address } = useParams()
+    const [loading, setLoading] = useState(false)
 
     const { 
-        loading, program, publicKey,
-        initialized, transactionPending, 
-        setLoading
+        program, publicKey,
+        initialized, transactionPending
     } = useContext(DecentraWorkContext)
 
 
@@ -92,6 +93,7 @@ export default function MilestoneFeature() {
 
     }, [initialized, program, transactionPending, publicKey, address, setLoading])
 
+    if (loading) return (<Loader />)
 
     return (
         <div className="flex w-full left-0 justify-center overflow-y-auto mb-20">

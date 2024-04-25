@@ -10,6 +10,7 @@ import { utf8 } from '@project-serum/anchor/dist/cjs/utils/bytes';
 
 const PROGRAM_ID = "2sMHGGGZkU7dWcexLxyCg8LUjrBekpqCnViJ4UURGS33"
 
+
 export interface IUserProfile {
     contractCount: number;
     lastContractIndex: number;
@@ -55,6 +56,7 @@ export interface IMilestoneContract {
     description: string;
     price: number;
     paid: boolean;
+    claimed: boolean;
 }
 
 export interface IPayMilestone {

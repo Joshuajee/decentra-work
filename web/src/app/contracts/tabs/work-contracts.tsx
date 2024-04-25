@@ -5,16 +5,17 @@ import { DecentraWorkContext } from "../../context/decentrawork-context"
 import { PublicKey } from "@solana/web3.js"
 import { IWorkContract, WORK_CONTRACT_STATE } from "../../context/use-decentrawork"
 import { utf8 } from "@coral-xyz/anchor/dist/cjs/utils/bytes"
+import Loader from "../../ui/loader"
 
 const WorkContract = () => {
 
 
     const [clientContracts, setClientContracts] = useState([])
+    const [loading, setLoading] = useState(false)
 
     const { 
-        initialized, program, publicKey, transactionPending,
-        userProfile,
-        setLoading, 
+        initialized, program, publicKey, 
+        transactionPending, userProfile
     } = useContext(DecentraWorkContext)
 
 
@@ -61,7 +62,7 @@ const WorkContract = () => {
         findClientContracts()
     }, [publicKey, program, initialized, transactionPending, userProfile?.contractCount, setLoading])
 
-
+    if (loading) return (<Loader />)
 
     return (
         <div className="flex w-full left-0 justify-center overflow-y-auto mb-20">

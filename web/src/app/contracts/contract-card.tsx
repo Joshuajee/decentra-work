@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { IWorkContract } from "../context/use-decentrawork";
 import Web3Button from "./web3-btn";
 import { PublicKey } from "@solana/web3.js";
+import toast from "react-hot-toast";
 
 export interface IMilestoneFormData {
     title: string;
@@ -21,6 +22,11 @@ export default function ContractCard ({contract, accept, client} : IProps) {
 
     const navigate = useNavigate()
 
+    const copy = () => {
+        navigator.clipboard.writeText("http://localhost:3000/accept/"+key);
+        toast.success("Link copied to clipboard")
+    }
+
     return (
         <div className="flex gap-3 flex-col my-2 w-full bg-base-300 rounded-md p-6">
 
@@ -35,6 +41,15 @@ export default function ContractCard ({contract, accept, client} : IProps) {
             <h3> Milestones: {milestones} </h3>
 
             <h3>Accepted: {accepted ? "Yes" : "No"} </h3>
+
+
+            {
+                authority.toString() == client?.toString() || true && (
+                    <button className="border-[1px] border-white p-2" onClick={copy}>
+                        Copy Invite Link
+                    </button>
+                )
+            }
 
             <button className="border-[1px] border-white p-2" onClick={() => navigate("/contract/"+ key)}>
                 View

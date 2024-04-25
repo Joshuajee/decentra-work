@@ -1,15 +1,10 @@
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
-import { useContext } from "react";
-import { DecentraWorkContext } from "../context/decentrawork-context";
 import WorkContract from './tabs/work-contracts';
 import EmploymentContract from './tabs/employment-contract';
 
+
 export default function ContractFeature() {
-
-
-    const { initialized, program, publicKey, transactionPending, userProfile, setLoading, } = useContext(DecentraWorkContext)
-
 
 
 
